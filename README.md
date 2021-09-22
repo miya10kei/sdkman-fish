@@ -2,6 +2,12 @@ sdkman-fish
 ---
 A fish plugin for [sdkman](https://sdkman.io/).
 
+When you execute install, uninstall, default, or use commands you can select a version with fzf.  
+![Screenshot from 2021-09-22 21-09-01](https://user-images.githubusercontent.com/7029819/134340916-4a00f3d9-4844-4d84-b60c-d85dd6746605.png)
+
+In addition, this plugin supports auto env function.
+If .sdkmanrc exists on current or parent directory, your java version in current shell process is changed automatically.
+
 # Requirements
 
 - [sdkman](https://sdkman.io/)
