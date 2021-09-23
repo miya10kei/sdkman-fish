@@ -179,8 +179,8 @@ end
 function __sdk_list_all_java
   if set -l rs (__sdk list java)
     echo $rs \
-      | sed -n -e '/^-\+/,/^=\+/p' \
-      | sed -e '/^[-=]\+/d' -e 's/\s//g' -e 's/installed/\*/g' \
+      | sed -n -E -e '/^-+/,/^=+/p' \
+      | sed -e '/^[-=]\+/d' -e 's/ //g' -e 's/installed/\*/g' \
       | awk -F '|' '{printf "%1s %s\n", $5, $6}' \
       | sed -e '/^ *$/d' \
       | sort -r
