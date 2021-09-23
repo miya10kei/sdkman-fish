@@ -179,10 +179,10 @@ end
 function __sdk_list_all_java
   if set -l rs (__sdk list java)
     echo $rs \
-      | sed -n -E -e '/^-+/,/^=+/p' \
-      | sed -e '/^[-=]\+/d' -e 's/ //g' -e 's/installed/\*/g' \
+      | __sdk_sed -n -E -e '/^-+/,/^=+/p' \
+      | __sdk_sed -e '/^[-=]\+/d' -e 's/ //g' -e 's/installed/\*/g' \
       | awk -F '|' '{printf "%1s %s\n", $5, $6}' \
-      | sed -e '/^ *$/d' \
+      | __sdk_sed -e '/^ *$/d' \
       | sort -r
   else
     echo $rs > /dev/stderr
@@ -192,7 +192,7 @@ end
 function __sdk_list_installed_java
   __sdk_list_all_java \
     | grep -e '^\*' \
-    | sed -e 's/[* ]*//g'
+    | __sdk_sed -e 's/[* ]*//g'
 end
 
 function __sdk_list_not_installed_java
@@ -203,8 +203,8 @@ end
 function __sdk_list_all_something
   if set -l rs (__sdk list $argv[1])
     echo $rs \
-      | sed -z -E -e 's/[\n>]//g' -e 's/^.*=+([0-9rc.>* \-]+)=+.*$/\1/g' -e 's/ {2,}/\n/g' \
-      | sed -e '/^$/d' \
+      | __sdk_sed -z -E -e 's/[\n>]//g' -e 's/^.*=+([0-9rc.>* \-]+)=+.*$/\1/g' -e 's/ {2,}/\n/g' \
+      | __sdk_sed -e '/^$/d' \
       | sort -r
   else
     echo $rs > /dev/stderr
@@ -214,7 +214,7 @@ end
 function __sdk_list_installed_something
   __sdk_list_all_something $argv[1] \
     | grep -e '^\*' \
-    | sed -e 's/[* ]*//g'
+    | __sdk_sed -e 's/[* ]*//g'
 end
 
 function __sdk_list_not_installed_something
@@ -242,3 +242,10 @@ function __sdk_remove_path
   set -x PATH $newer
 end
 
+function __sdk_sed
+  if type -q gsed
+    gsed $argv
+  else
+    sed $argv
+  end
+end
