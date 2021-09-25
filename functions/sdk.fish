@@ -96,9 +96,23 @@ function __sdk_uninstall
 end
 
 function __sdk_use
+
+  if test (count $argv) -eq 0
+    echo -e "\033[0;31m\033[1mNo candidate version provided.\033[0m\033[0;0m" > /dev/stderr
+    return 1
+  end
+
   set candidate $argv[1]
+  set base "$HOME/.sdkman/candidates/$candidate"
+
   if test (count $argv) -ge 2
     set selected $argv[2]
+  end
+
+  if set -q selected; and test "$selected" = "clear"
+    __sdk_remove_path "$base/*"
+    set -x JAVA_HOME  "$HOME/.sdkman/candidates/$candidate/current"
+    return
   end
 
   if not set -q selected
@@ -122,9 +136,9 @@ function __sdk_use
     end
   end
 
-  set -l base "$HOME/.sdkman/candidates/$candidate"
   __sdk_remove_path "$base/*"
   __sdk_add_path "$base/$selected/bin"
+  set -x JAVA_HOME  "$HOME/.sdkman/candidates/$candidate/$selected"
 
   echo -e "\033[0;92m\033[1mUsing $candidate version $selected in this shell.\033[0m\033[0;0m"
 end
@@ -165,7 +179,7 @@ function __sdk_auto_env --on-variable PWD
     return
   end
 
-  __sdk_remove_path "$sdk_java_dir/*"
+  sdk use java clear
 end
 
 
