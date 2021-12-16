@@ -194,7 +194,7 @@ function __sdk_list_all_java
   if set -l rs (__sdk list java)
     echo $rs \
       | __sdk_sed -n -E -e '/^-+/,/^=+/p' \
-      | __sdk_sed -e '/^[-=]\+/d' -e 's/ //g' -e 's/installed/\*/g' \
+      | __sdk_sed -e '/^[-=]\+/d' -e 's/ //g' -e 's/installed/\*/g' -e 's/localonly//g' \
       | awk -F '|' '{printf "%1s %s\n", $5, $6}' \
       | __sdk_sed -e '/^ *$/d' \
       | sort -r
